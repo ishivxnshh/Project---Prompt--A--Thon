@@ -47,8 +47,12 @@ export default function Dashboard() {
     // Initial Fetch
     useEffect(() => {
         fetchData();
-        // Initialize audio
-        alertAudio.current = new Audio('/mixkit-digital-clock-digital-alarm-buzzer-992.wav'); // Simple beep
+        // Initialize audio with error handling
+        try {
+            alertAudio.current = new Audio('/mixkit-digital-clock-digital-alarm-buzzer-992.wav');
+        } catch (error) {
+            console.warn('Audio initialization failed:', error);
+        }
     }, []);
 
     // Reminder System

@@ -7,7 +7,7 @@ import taskRoutes from './routes/tasks.js';
 import aiRoutes from './routes/ai.js';
 
 // Load environment variables
-dotenv.config();
+dotenv.config(); // Updated API key loaded
 
 // Initialize Express app
 const app = express();

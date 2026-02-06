@@ -113,12 +113,16 @@ export function TimerProvider({ children }: { children: React.ReactNode }) {
     };
 
     const playAudio = () => {
-        if (!audioRef.current) {
-            audioRef.current = new Audio('/mixkit-digital-clock-digital-alarm-buzzer-992.wav');
-            audioRef.current.loop = true;
+        try {
+            if (!audioRef.current) {
+                audioRef.current = new Audio('/mixkit-digital-clock-digital-alarm-buzzer-992.wav');
+                audioRef.current.loop = true;
+            }
+            audioRef.current.currentTime = 0;
+            audioRef.current.play().catch(console.error);
+        } catch (error) {
+            console.warn('Audio playback failed:', error);
         }
-        audioRef.current.currentTime = 0;
-        audioRef.current.play().catch(console.error);
     };
 
     const stopAudio = () => {

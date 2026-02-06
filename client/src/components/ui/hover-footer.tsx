@@ -16,7 +16,7 @@ export const TextHoverEffect = ({
     const svgRef = useRef<SVGSVGElement>(null);
     const [cursor, setCursor] = useState({ x: 0, y: 0 });
     const [hovered, setHovered] = useState(false);
-    const [maskPosition, setMaskPosition] = useState({ cx: "50%", cy: "50%" });
+    const [maskPosition, setMaskPosition] = useState({ cx: 50, cy: 50 });
 
     useEffect(() => {
         if (svgRef.current && cursor.x !== null && cursor.y !== null) {
@@ -24,8 +24,8 @@ export const TextHoverEffect = ({
             const cxPercentage = ((cursor.x - svgRect.left) / svgRect.width) * 100;
             const cyPercentage = ((cursor.y - svgRect.top) / svgRect.height) * 100;
             setMaskPosition({
-                cx: `${cxPercentage}%`,
-                cy: `${cyPercentage}%`,
+                cx: cxPercentage,
+                cy: cyPercentage,
             });
         }
     }, [cursor]);
@@ -50,13 +50,18 @@ export const TextHoverEffect = ({
                     cy="50%"
                     r="25%"
                 >
-                    {hovered && (
+                    {hovered ? (
                         <>
                             <stop offset="0%" stopColor="#eab308" />
                             <stop offset="25%" stopColor="#ef4444" />
                             <stop offset="50%" stopColor="#80eeb4" />
                             <stop offset="75%" stopColor="#06b6d4" />
                             <stop offset="100%" stopColor="#8b5cf6" />
+                        </>
+                    ) : (
+                        <>
+                            <stop offset="0%" stopColor="transparent" />
+                            <stop offset="100%" stopColor="transparent" />
                         </>
                     )}
                 </radialGradient>
@@ -66,8 +71,8 @@ export const TextHoverEffect = ({
                     gradientUnits="userSpaceOnUse"
                     r="20%"
                     animate={{
-                        cx: maskPosition.cx,
-                        cy: maskPosition.cy
+                        cx: `${maskPosition.cx}%`,
+                        cy: `${maskPosition.cy}%`
                     }}
                     transition={{ duration: duration ?? 0, ease: "easeOut" }}
                 >
