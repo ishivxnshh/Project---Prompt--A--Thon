@@ -1,10 +1,21 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import Task from '../models/Task.js';
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+// Create a function to get the AI instance (lazy initialization)
+const getGenAI = () => {
+    if (!process.env.GEMINI_API_KEY) {
+        throw new Error('GEMINI_API_KEY not found in environment variables');
+    }
+    return new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+};
 
 export const prioritizeTasks = async (req, res) => {
     try {
+        // Debug: Log API key status
+        console.log('🔍 API Key check:', process.env.GEMINI_API_KEY ? 
+            `Present (${process.env.GEMINI_API_KEY.substring(0, 20)}...)` : 
+            'MISSING');
+        
         // Fetch user's tasks
         const tasks = await Task.find({ userId: req.userId, status: 'todo' });
 
@@ -49,6 +60,7 @@ Consider:
 Respond ONLY with valid JSON, no additional text.`;
 
         // Call Gemini API
+        const genAI = getGenAI();
         const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
         const result = await model.generateContent(prompt);
         const response = await result.response;
@@ -174,6 +186,7 @@ export const analyzeTask = async (req, res) => {
 
         Respones ONLY with valid JSON. Do not include markdown formatting.`;
 
+        const genAI = getGenAI();
         const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
         const result = await model.generateContent(prompt);
         const response = await result.response;

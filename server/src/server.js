@@ -1,13 +1,24 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+// Get current directory in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Load environment variables FIRST with explicit path
+dotenv.config({ path: join(__dirname, '../.env') });
+
+// Log environment status
+console.log('🔧 Environment loaded from:', join(__dirname, '../.env'));
+console.log('📌 GEMINI_API_KEY:', process.env.GEMINI_API_KEY ? '✅ Loaded' : '❌ Missing');
+
 import { connectDB } from './config/database.js';
 import authRoutes from './routes/auth.js';
 import taskRoutes from './routes/tasks.js';
 import aiRoutes from './routes/ai.js';
-
-// Load environment variables
-dotenv.config(); // Updated API key loaded
 
 // Initialize Express app
 const app = express();
